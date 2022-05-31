@@ -249,6 +249,30 @@ namespace WinFormUI
                         {
                             //Get the operator type
                             var operatorType = GetOperationType(userInput[i]);
+
+                            //Check if we actually have a right side number
+                            if (operation.RightSide.Length == 0)
+                            {
+                                //check the operator is not a negative number
+                                if (operatorType != OperationType.Minus)
+                                {
+                                    throw new InvalidOperationException("The operators used improperly. ");
+                                }
+
+                                //if - is not operator, then that is a negative value
+                                operation.RightSide += userInput[i];
+                            }
+                            else
+                            { 
+                                //calculate previous equation and set to the left side
+                                operation.LeftSide = CalculateOperation(operation);
+
+                                //set new operator
+                                operation.OperationType = operatorType;
+
+                                //Clear the previous right number
+                                operation.RightSide = string.Empty;
+                            }
                         }
                         else
                         {
